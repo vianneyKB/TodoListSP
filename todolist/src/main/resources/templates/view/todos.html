@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title th:text = "$(title)">todos</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"/>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"/>
+<link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css"/>
+</head>
+<body>
+<div class="container-fluid">
+<div class="row">
+
+<div class="col-md-12">
+<h2>Todo List</h2>
+<form action="#" th:action="@{${isAdd}?'/save':'/update'}" th:object="${todo}" method="post">
+<div class="form-group">
+
+<div class="alert alert-succes" th:if="${SuccessMessage}">
+<a href="#" class="close" data-dismiss="alert" arial-label="close" >&times;</a>
+<strong th:text="${SuccessMessage}"></strong>
+</div>
+
+<div class="alert alert-succes" th:if="${ErrorMessage}">
+<a href="#" class="close" data-dismiss="alert" arial-label="close">&times;</a>
+<strong th:text="${ErrorMessage}"></strong>
+</div>
+<input type="text" class="form-control" id="title" placeholder="title" th:field="{title}"/>
+</div>
+<div class="form-group">
+<input type="text" class="form-control" id="Category" placeholder="Category" th:field="{Category}"/>
+</div>
+<div class="form-group">
+<input type="text" class="form-control" id="Description" placeholder="Description" th:field="{Description}"/>
+</div>
+<div class="form-group">
+<input type="text" class="form-control" id="DueDate" placeholder="Due_Date" th:field="{Due_Date}"/>
+</div>
+<!--     <div class="form-group">
+<input type="text" class="form-control" id="Completed" placeholder="Completed" th:field="{Complete}"/>
+</div>
+-->
+<input type="hidden" class="form-control" th:field="*{Id}"/>
+<button type="submit" class="btn btn-primary" th:text="${isAdd}?'Save':'Update'">Submit</button>
+
+</form>
+
+</div>
+<div class="col-md-12">
+<h2> All Todo </h2>
+<div style="margin-top: 10px">
+<table id="todoTable" class="table table-striped table-bordered" style="width: 100%">
+<thead>
+<tr>
+<th>Title</th>
+<th>Category</th>
+<th>Description</th>
+<th>Due_Date</th>
+<th>Complete/Incomplete</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr th:each="todo:${todos}">
+<td th:text="${todo.Title}"></td>
+<td th:text="${todo.Category}"></td>
+<td th:text="${todo.Description}"></td>
+<td th:text="${todo.Due_Date}"></td>
+<!--    -->
+<td th:text="${todo.Complete/Incomplete}"></td>
+<td>
+<a th:href="@{/getTodo/'+${todo.Id}}">
+<i class="fa fa-edit" style="font-size: 21px;">
+</i>
+</a>
+<a href="javascript:void(0)" class="confirm-delet" th:attribut="data-id=${todo.ID}, data-name=${todo.Title+' '+todo.Category}">
+<i class="fa fa-trash" style="font-size: 21px; color: red">
+</i>
+</a>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript">
+    $("#todoTable").dataTable();
+    $(".confirm-delet").on('click', function(e)
+    {
+        e.preventDefault();
+        var id = $(this).data('Id');
+        var name = $(this).data('Title');
+        $("#modal-name").html(name);
+        $('#idmodallink').attr('href','/deletetodo/'+Id);
+        $('#todomodal').modal('show');
+    });
+</script>
+<script src=""></script>
+<script src=""></script>
+
+<div class="modal fade" id="todoModal" tabindex="-1" role="dialog" aria-labelledby="myModallable" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-body" id="myModalBody">
+<p> Do you want to delete this(<span id="modal-name"></span>)record?</p>
+</div>
+<div class="modal-footer" >
+<a id="idmodallink" href="#"class="btn btn-primary">Yes</a>
+<button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+</div>
+</div>
+</div>
+</div>
+
+</body>
+</html>
